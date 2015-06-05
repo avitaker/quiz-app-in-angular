@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>This is my quiz</title>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.15/angular.min.js"></script>
+<script src="quizApp.js"></script>
+<script src="quizControllers.js"></script>
+<script src="quizDirectives.js"></script>
+<style>
+body {
+  background-color:#75c9cc;
+}
+
+h3 {
+  text-align:center;
+}
+
+#quiz_navigation_bar{
+  padding-top:5px;
+}
+
+#next_button {
+   border-top: 1px solid #f5fbff;
+   background: #27b07e;
+   background: -webkit-gradient(linear, left top, left bottom, from(#29b073), to(#27b07e));
+   background: -webkit-linear-gradient(top, #29b073, #27b07e);
+   background: -moz-linear-gradient(top, #29b073, #27b07e);
+   background: -ms-linear-gradient(top, #29b073, #27b07e);
+   background: -o-linear-gradient(top, #29b073, #27b07e);
+   padding: 7px 14px;
+   -webkit-border-radius: 2px;
+   -moz-border-radius: 2px;
+   border-radius: 2px;
+   /*-webkit-box-shadow: rgba(0,0,0,1) 0 1px 0;
+   -moz-box-shadow: rgba(0,0,0,1) 0 1px 0;
+   box-shadow: rgba(0,0,0,1) 0 1px 0;*/
+   text-shadow: rgba(0,0,0,.4) 0 1px 0;
+   color: white;
+   font-size: 13px;
+   font-family: Helvetica, Arial, Sans-Serif;
+   text-decoration: none;
+   vertical-align: middle;
+   }
+#next_button:hover {
+   border-top-color: #3ae04d;
+   background: #3ae04d;
+   color: #fcfcfc;
+   }
+#next_button:active {
+   border-top-color: #1b435e;
+   background: #197319;
+   }
+#next_button:disabled {
+  background:grey;
+  color:#27b07e;
+  text-decoration:line-through;
+}
+
+#back_button {
+   border-top: 1px solid #f5fbff;
+   background: #5437a6;
+   background: -webkit-gradient(linear, left top, left bottom, from(#525891), to(#5437a6));
+   background: -webkit-linear-gradient(top, #525891, #5437a6);
+   background: -moz-linear-gradient(top, #525891, #5437a6);
+   background: -ms-linear-gradient(top, #525891, #5437a6);
+   background: -o-linear-gradient(top, #525891, #5437a6);
+   padding: 7px 14px;
+   -webkit-border-radius: 2px;
+   -moz-border-radius: 2px;
+   border-radius: 2px;
+   -webkit-box-shadow: rgba(0,0,0,1) 0 1px 0;
+   -moz-box-shadow: rgba(0,0,0,1) 0 1px 0;
+   box-shadow: rgba(0,0,0,1) 0 1px 0;
+   text-shadow: rgba(0,0,0,.4) 0 1px 0;
+   color: white;
+   font-size: 13px;
+   font-family: Helvetica, Arial, Sans-Serif;
+   text-decoration: none;
+   vertical-align: middle;
+   }
+#back_button:hover {
+   border-top-color: #ba39de;
+   background: #ba39de;
+   color: #fcfcfc;
+   }
+#back_button:active {
+   border-top-color: #1b435e;
+   background: red;
+   }
+#back_button:disabled {
+  background:grey;
+  color:#5437a6;
+  text-decoration:line-through;
+}
+.finish_button {
+   border-top: 1px solid #f5fbff;
+   background: #b5b132;
+   background: -webkit-gradient(linear, left top, left bottom, from(#c4c92f), to(#b5b132));
+   background: -webkit-linear-gradient(top, #c4c92f, #b5b132);
+   background: -moz-linear-gradient(top, #c4c92f, #b5b132);
+   background: -ms-linear-gradient(top, #c4c92f, #b5b132);
+   background: -o-linear-gradient(top, #c4c92f, #b5b132);
+   padding: 7px 14px;
+   -webkit-border-radius: 2px;
+   -moz-border-radius: 2px;
+   border-radius: 2px;
+   -webkit-box-shadow: rgba(0,0,0,1) 0 1px 0;
+   -moz-box-shadow: rgba(0,0,0,1) 0 1px 0;
+   box-shadow: rgba(0,0,0,1) 0 1px 0;
+   text-shadow: rgba(0,0,0,.4) 0 1px 0;
+   color: white;
+   font-size: 13px;
+   font-family: Helvetica, Arial, Sans-Serif;
+   text-decoration: none;
+   vertical-align: middle;
+   }
+.finish_button:hover {
+   border-top-color: #ffea03;
+   background: #ffea03;
+   color: #fcfcfc;
+   }
+.finish_button:active {
+   border-top-color: #52f213;
+   background: #52f213;
+   }
+
+#welcome_div{
+  padding-bottom:15px;
+}
+
+#quiz_area_div{
+  background-color:white;
+  border-radius:1px;
+}
+
+#question_here{
+  padding:5px;
+}
+
+#answer_options{
+  padding-bottom:5px;
+
+}
+</style>
+</head>
+<body ng-app='quizApp'>
+  <script type='text/ng-template' id="questionDivInline.html">
+    <div id="quiz_area_div">
+      <p id="question_here">{{quizObjectJSON[questionNumber].question}}</p>
+        <form id="answer_options">
+          <input type="radio" ng-model="answeredQuiz[questionNumber].userAnswer" ng-value="0">{{quizObjectJSON[questionNumber].choices[0]}}<br>
+          <input type="radio" ng-model="answeredQuiz[questionNumber].userAnswer" ng-value="1">{{quizObjectJSON[questionNumber].choices[1]}}<br>
+          <input type="radio" ng-model="answeredQuiz[questionNumber].userAnswer" ng-value="2">{{quizObjectJSON[questionNumber].choices[2]}}<br>
+          <input type="radio" ng-model="answeredQuiz[questionNumber].userAnswer" ng-value="3">{{quizObjectJSON[questionNumber].choices[3]}}<br>
+        </form>
+    </div>
+  </script>
+  <div id="main" ng-controller='MainController'>
+    <h3> {{title}} </h3>
+    <div id="welcome_div" ng-hide="hideWelcomeDiv">Welcome to my quiz. Please click "Next" to continue</div>
+    <question-div ng-show='isQuizActive'></question-div>
+    <div id="final_results" ng-show="scoreQuizNow">
+      <p id="final_score_number">You scored {{finalScore}} on the quiz </p>
+      <div class="wrong_answer_display" ng-repeat="wrongAnswer in wrongAnswers">On the following question: {{wrongAnswer.question}} <br> You selected: {{wrongAnswer.choices[wrongAnswer.userAnswer]}} <br> The correct answer is: {{wrongAnswer.choices[wrongAnswer.correctAnswer]}} </div>
+      <div class="unanswered_display" ng-repeat="notAnswered in notAnswereds">You didn't pick an answer for: {{notAnswered.question}} <br> The correct answer is {{notAnswered.choices[notAnswered.correctAnswer]}}</div>
+    </div>
+    <input type="button" id="back_button" value="Go back to first question" ng-click="backButtonOnclick()" ng-show='isQuizActive' ng-disabled="questionNumber<=0">
+    <input type="button" id="next_button" value="Next" ng-click="nextButtonOnclick()" ng-disabled="questionNumber===quizObjectJSON.length-1" ng-show='!scoreQuizNow'>
+    <input type="button" class="finish_button" value="Finish and score quiz" ng-show='questionNumber===quizObjectJSON.length-1' ng-click="finishButtonOnclick()">
+    <input type="button" class="finish_button" value="Reload quiz?" ng-show='isQuizDone' onclick="location.reload()">
+  </div>
+</body>
+</html>
