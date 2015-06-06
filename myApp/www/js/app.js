@@ -16,7 +16,7 @@ angular.module('quizApp', ['ionic'])
       StatusBar.styleDefault();
     }
   });
-}).controller("MainController",['$scope','$ionicPopup',function($scope,$ionicPopup){
+}).controller("MainController",['$scope','$filter',function($scope,$filter){
   $scope.quizObjectJSON=[{"question": "Grand Central Terminal, Park Avenue, New York is the world's", "choices": ["largest railway station","highest railway station","longest railway station","None of the above"], "correctAnswer":0},
   {"question": "Entomology is the science that studies", "choices": ["Behavior of human beings","Insects","The origin and history of technical and scientific terms","the formation of rocks"], "correctAnswer":1},
   {"question": "Eritrea, which became the 182nd member of the UN in 1993, is in the continent of", "choices": ["Asia","Europe","Africa","Australia"], "correctAnswer":2},
@@ -26,7 +26,39 @@ angular.module('quizApp', ['ionic'])
   {"question": "Galileo was an Italian astronomer who", "choices": ["discovered four satellites of Jupiter","discovered that the movement of pendulum produces a regular time measurement","developed the telescope","All of the above"], "correctAnswer":3},
   {"question": "Exposure to sunlight helps a person improve his health because", "choices": ["resistance power increases","the ultraviolet rays convert skin oil into Vitamin D","the infrared light kills bacteria in the body","the pigment cells in the skin get stimulated and produce a healthy tan"], "correctAnswer":1},
   {"question": "First China War was fought between", "choices": ["China and Britain","China and France","China and Egypt","China and Greece"], "correctAnswer":0},
-  {"question": "Famous Indian sculptures depicting art of love built some time in 950 AD - 1050 AD are at", "choices": ["Mahabalipuram temples","Jama Masjid","Khajuraho temples","Sun temple"], "correctAnswer":2}];
+  {"question": "Famous Indian sculptures depicting art of love built some time in 950 AD - 1050 AD are at", "choices": ["Mahabalipuram temples","Jama Masjid","Khajuraho temples","Sun temple"], "correctAnswer":2}, 
+  {"question":"In economics, dumping is","choices":["selling of goods abroad at a price well below the production cost at the home market price","the process by which the supply of a manufacture's product remains low in the domestic market, which batches him better price","prohibited by regulations of GATT","All of the above"],"correctAnswer":3},
+  {"question":"Friction can be reduced by changing from","choices":["sliding to rolling","rolling to sliding","potential energy to kinetic energy","dynamic to static"],"correctAnswer":0},
+  {"question":"During World War II, when did Germany attack France?","choices":["1915","1940","1943","1962"],"correctAnswer":1},
+  {"question":"The ozone layer restricts which of the following types of radiation?","choices":["Visible light","Infrared radiation","X-rays and gamma rays","Ultraviolet radiation"],"correctAnswer":3},
+  {"question":"FDuring World War II, when did Germany attack France?","choices":["1915","1940","1943","1962"],"correctAnswer":1},
+  {"question":"Eugenics is the study of","choices":["people of European origin","different races of mankind","altering human beings by changing their genetic components","genetics of plants"],"correctAnswer":2},
+  {"question":"Escape velocity of a rocket fired from the earth towards the moon is a velocity to get rid of the","choices":["Moon's gravitational pull","Earth's gravitational pull","Centripetal force due to the earth's rotation","Pressure of the atmosphere"],"correctAnswer":1},
+  {"question":"Hamid Karzai was chosen president of Afghanistan in","choices":["2002","1978","2010","1899"],"correctAnswer":0},
+  {"question":"Headquarters of UNO are located at","choices":["Geneva (Switzerland)","Paris (France)","Hague (Netherlands)","New York (USA)"],"correctAnswer":3},
+  {"question":"For seeing objects at the surface of water from a submarine under water, the instrument used is","choices":["telescope","spectroscope","periscope","noScope 360"],"correctAnswer":2}];
+  $scope.quizObjectJSO=$filter('filter')($scope.quizObject,function(){
+  	var eliminateDuplicates=function (arr) {
+		  var i,
+		      len=arr.length,
+		      out=[],
+		      obj={};
+
+		  for (i=0;i<len;i++) {
+		    obj[arr[i]]=0;
+		  }
+		  for (i in obj) {
+		    out.push(i);
+		  }
+		  return out;
+		}
+  	var returnArray=[];
+  	while (returnArray.length<10){
+  		var randomNum=Math.floor(Math.random(quizObject.length-0));
+  		returnArray.push(randomNum);
+  		eliminateDuplicates(returnArray);
+	  }
+	});
   $scope.answeredQuiz=$scope.quizObjectJSON;
   $scope.title="Avi's quiz";
   $scope.questionNumber=-1;
@@ -98,7 +130,7 @@ angular.module('quizApp', ['ionic'])
       }
       $scope.scoreQuizNow=true;
       $scope.isQuizDone=true;
-      if ($scope.finalScore===10){$scope.perfectQuiz=true}
+      if ($scope.finalScore===10){$scope.perfectQuiz=true;}
     }
   }
 }]).directive('questionDiv',function(){
