@@ -42,16 +42,17 @@
         </script>
         <div id="welcome_div" ng-hide="hideWelcomeDiv">Welcome to my quiz. Please click "Next" to continue</div>
         <question-div ng-show='isQuizActive'></question-div>
-        <div id="final_results" ng-show="scoreQuizNow">
-          <p id="final_score_number">You scored {{finalScore}} on the quiz </p>
-          <div class="card">
+        <div class ="card" id="final_results" ng-show="scoreQuizNow">
+          <p class="item item-divider" id="final_score_number">You scored {{finalScore}} out of {{answeredQuiz.length}} on the quiz </p>
+          <p class="item item-text-wrap" id="perfect_score" ng-show="perfectQuiz">Nicely done! You answered all the questions correctly</p>
+          <div ng-show="anyWrong">
             <div class="item item-divider" background-color="red">Wrongly answered questions</div>
-            <div class="item item-text-wrap" ng-repeat="wrongAnswer in wrongAnswers">On the following question: {{wrongAnswer.question}} <br> You selected: {{wrongAnswer.choices[wrongAnswer.userAnswer]}} <br> The correct answer is: {{wrongAnswer.choices[wrongAnswer.correctAnswer]}} 
+            <div class="item item-text-wrap" ng-repeat="wrongAnswer in wrongAnswers">On the following question: <b>{{wrongAnswer.question}}</b> <br> You selected: <span class="wrong_choice"> {{wrongAnswer.choices[wrongAnswer.userAnswer]}} </span> <br> The correct answer is: <span class="correct_choice">{{wrongAnswer.choices[wrongAnswer.correctAnswer]}} </span>
             </div>
           </div>
-          <div class="card">
-            <div class="item item-divider" background-color="yellow">Unanswered Question</div>
-            <div class="item item-text-wrap" ng-repeat="notAnswered in notAnswereds">You didn't pick an answer for: {{notAnswered.question}} <br> The correct answer is: {{notAnswered.choices[notAnswered.correctAnswer]}}</div>
+          <div ng-show="anyMissed">
+            <div class="item item-divider" background-color="yellow">Unanswered Questions</div>
+            <div class="item item-text-wrap" ng-repeat="notAnswered in notAnswereds"> You didn't pick an answer for: <b>{{notAnswered.question}} </b> <br> The correct answer is: <span class="correct_choice"> {{notAnswered.choices[notAnswered.correctAnswer]}} </span> </div>
           </div>
         </div>
         <div class="button-bar">

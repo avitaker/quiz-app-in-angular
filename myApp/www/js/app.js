@@ -35,6 +35,9 @@ angular.module('quizApp', ['ionic'])
   $scope.scoreQuizNow=false;
   $scope.quizIsDone=false;
   $scope.finalScore=0;
+  $scope.anyWrong=false;
+  $scope.anyMissed=false;
+  $scope.perfectQuiz=false;
   $scope.wrongAnswers=[];
   $scope.notAnswereds=[];
   /*$scope.showConfirm = function() {
@@ -86,13 +89,16 @@ angular.module('quizApp', ['ionic'])
         }
         else if ($scope.answeredQuiz[i].userAnswer!=$scope.answeredQuiz[i].correctAnswer && $scope.answeredQuiz[i].userAnswer!=null|undefined){
           $scope.wrongAnswers.push($scope.answeredQuiz[i]);
+          $scope.anyWrong=true;
         }
         else {
           $scope.notAnswereds.push($scope.answeredQuiz[i]);
+          $scope.anyMissed=true;
         }
       }
       $scope.scoreQuizNow=true;
       $scope.isQuizDone=true;
+      if ($scope.finalScore===10){$scope.perfectQuiz=true}
     }
   }
 }]).directive('questionDiv',function(){
