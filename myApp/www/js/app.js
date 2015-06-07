@@ -53,12 +53,12 @@ angular.module('quizApp', ['ionic'])
   	return out;
   }
   $scope.returnArray=[];
-  while ($scope.returnArray.length<10){
-  	$scope.randomNum=Math.floor(Math.random()*($scope.quizObjectRaw.length-0))+0;
+  while ($scope.returnArray.length<11){
+  	$scope.randomNum=Math.floor(Math.random()*($scope.quizObjectRaw.length))+0;
   	$scope.returnArray.push($scope.randomNum);
   	$scope.eliminateDuplicates($scope.returnArray);
   }
-  for (var l=0;l<$scope.returnArray.length;l++){
+  for (var l=0;l<$scope.returnArray.length-1;l++){
   	$scope.thisOne=$scope.returnArray[l];
   	$scope.quizObjectJSON.push($scope.quizObjectRaw[$scope.thisOne]);
   }
