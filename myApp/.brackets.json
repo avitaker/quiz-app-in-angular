@@ -1,0 +1,10 @@
+{
+    "jscodehints.detectedExclusions": [
+        "/Users/avinashdavid/Downloads/quiz_app/quiz-app-in-angular/myApp/platforms/android/build/intermediates/assets/debug/www/lib/ionic/js/angular-ui/angular-ui-router.min.js",
+        "/Users/avinashdavid/Downloads/quiz_app/quiz-app-in-angular/myApp/platforms/ios/cordova/lib/build.js",
+        "/Users/avinashdavid/Downloads/quiz_app/quiz-app-in-angular/myApp/platforms/ios/cordova/lib/check_reqs.js",
+        "/Users/avinashdavid/Downloads/quiz_app/quiz-app-in-angular/myApp/platforms/ios/cordova/lib/clean.js",
+        "/Users/avinashdavid/Downloads/quiz_app/quiz-app-in-angular/myApp/platforms/ios/cordova/lib/run.js",
+        "/Users/avinashdavid/Downloads/quiz_app/quiz-app-in-angular/myApp/platforms/ios/cordova/lib/spawn.js"
+    ]
+}

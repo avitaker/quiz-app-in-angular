@@ -22,46 +22,32 @@
     <!-- your app's js -->
     <script src="js/app.js"></script>
   </head>
-  <body ng-app="quizApp" ng-controller="MainController">
-
+  <body ng-app="quizApp">
     <ion-pane>
-      <ion-header-bar class="bar-balanced">
-        <h1 class="title">Avi's quiz</h1>
-      </ion-header-bar>
-      <ion-content>
-        <script type='text/ng-template' id="questionDivInline.html">
-            <div class="card" id="quiz_area_div" height='80%'>
-              <div class="item item-divider item-text-wrap" id="question_here"><b>{{quizObjectJSON[questionNumber].question}}</b></div>
-                <div id="choices_here">
-                  <label><ion-radio class="item item-text-wrap" ng-model="answeredQuiz[questionNumber].userAnswer" ng-value="0">{{quizObjectJSON[questionNumber].choices[0]}}</ion-radio></label>
-                  <label><ion-radio class="item item-text-wrap" ng-model="answeredQuiz[questionNumber].userAnswer" ng-value="1">{{quizObjectJSON[questionNumber].choices[1]}}</ion-radio></label>
-                  <label><ion-radio class="item item-text-wrap" ng-model="answeredQuiz[questionNumber].userAnswer" ng-value="2">{{quizObjectJSON[questionNumber].choices[2]}}</ion-radio></label>
-                  <label><ion-radio class="item item-text-wrap" ng-model="answeredQuiz[questionNumber].userAnswer" ng-value="3">{{quizObjectJSON[questionNumber].choices[3]}}</ion-radio></label>
-                </div>
-            </div>
-        </script>
-        <div id="welcome_div" ng-hide="hideWelcomeDiv">Welcome to my quiz. Please click "Next" to continue</div>
-        <question-div id="quiz_area" ng-show='isQuizActive'></question-div>
-        <div class ="card" id="final_results" ng-show="scoreQuizNow">
-          <p class="item item-divider" id="final_score_number">You scored {{finalScore}} out of {{answeredQuiz.length}} on the quiz </p>
-          <p class="item item-text-wrap" id="perfect_score" ng-show="perfectQuiz">Nicely done! You answered all the questions correctly</p>
-          <div ng-show="anyWrong">
-            <div class="item item-divider" background-color="red">Wrongly answered questions</div>
-            <div class="item item-text-wrap" ng-repeat="wrongAnswer in wrongAnswers">On the following question: <b>{{wrongAnswer.question}}</b> <br> You selected: <span class="wrong_choice"> {{wrongAnswer.choices[wrongAnswer.userAnswer]}} </span> <br> The correct answer is: <span class="correct_choice">{{wrongAnswer.choices[wrongAnswer.correctAnswer]}} </span>
-            </div>
-          </div>
-          <div ng-show="anyMissed">
-            <div class="item item-divider" background-color="yellow">Unanswered Questions</div>
-            <div class="item item-text-wrap" ng-repeat="notAnswered in notAnswereds"> You didn't pick an answer for: <b>{{notAnswered.question}} </b> <br> The correct answer is: <span class="correct_choice"> {{notAnswered.choices[notAnswered.correctAnswer]}} </span> </div>
-          </div>
-        </div>
-        <div class="button-bar">
-          <a class="button button-outline button-royal" ng-click="backButtonOnclick()" ng-show='isQuizActive' ng-disabled="questionNumber<=0">Go back to first question</a>
-          <a class="button button-outline button-balanced" ng-click="nextButtonOnclick()" ng-disabled="questionNumber===quizObjectJSON.length-1" ng-show='!scoreQuizNow'>Next</a>
-        </div>
-        <button class="button button-full button-assertive" ng-show='questionNumber===quizObjectJSON.length-1' ng-click="finishButtonOnclick()">Finish and score quiz</button>
-        <button class="button button-block button-calm" ng-show='isQuizDone' onclick="location.reload()">Reload quiz?</button>
-      </ion-content>
+
+      <ion-side-menus ng-controller='stateChange'>
+        <ion-side-menu-content>
+          <ion-nav-bar class="bar-light"></ion-nav-bar>
+          <ion-nav-view></ion-nav-view>
+        </ion-side-menu-content>
+        <ion-side-menu side="left">
+          <ion-list>
+            <ion-item ng-click="setPage('quiz')" menu-close>Go to Quiz</ion-item>
+            <ion-item ng-click="setPage('acknowledgements')" menu-close>Go to Acknowledgements</ion-item>
+          </ion-list>
+        <ion-side-menu>
+      </ion-side-menus>
+      <!-- <ion-side-menus>
+    <ion-side-menu-content>
+      Content!
+      <button ng-click="toggleLeftSideMenu()">
+        Toggle Left Side Menu
+      </button>
+    </ion-side-menu-content>
+    <ion-side-menu side="left">
+      Left Menu!
+    <ion-side-menu>
+  </ion-side-menus> -->
     </ion-pane>
   </body>
 </html>
