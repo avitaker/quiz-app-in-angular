@@ -22,6 +22,11 @@ angular.module('quizApp', ['ionic'])
 
 }]).config(['$stateProvider','$urlRouterProvider',function($stateProvider, $urlRouterProvider){
   $stateProvider
+  .state('choose',{
+    url:'/choose',
+    templateUrl:'templates/homeTmpl.html',
+    controller:'StartController'
+  })
   .state('quiz',{
     url:'/quiz',
     templateUrl:'templates/quizStateTmpl.html',
@@ -32,9 +37,9 @@ angular.module('quizApp', ['ionic'])
     templateUrl:'templates/acknowledgementsTmpl.html',
     controller:'AcknowledgementsContr'
   });
-  $urlRouterProvider.otherwise('/quiz');
-}]).controller("QuizController",['$scope',function($scope){
-  $scope.quizObjectRaw=[{"category":"trivia","question": "Grand Central Terminal, Park Avenue, New York is the world's", "choices": ["largest railway station","highest railway station","longest railway station","None of the above"], "correctAnswer":0},
+  $urlRouterProvider.otherwise('/choose');
+}]).service("Data",function(){
+  var quizObjectRaw=[{"category":"trivia","question": "Grand Central Terminal, Park Avenue, New York is the world's", "choices": ["largest railway station","highest railway station","longest railway station","None of the above"], "correctAnswer":0},
   {"category":"science","question": "Entomology is the science that studies", "choices": ["Behavior of human beings","Insects","The origin and history of technical and scientific terms","the formation of rocks"], "correctAnswer":1},
   {"category":"world","question": "Eritrea, which became the 182nd member of the UN in 1993, is in the continent of", "choices": ["Asia","Europe","Africa","Australia"], "correctAnswer":2},
   {"category":"world","question": "Garampani sanctuary is located in the Indian town of", "choices": ["Diphu, Assam","Junagarh, Gujarat","Gangtok, Sikkim","Kohima, Nagaland"], "correctAnswer":0},
@@ -54,36 +59,91 @@ angular.module('quizApp', ['ionic'])
   {"category":"history","question":"Hamid Karzai was chosen president of Afghanistan in","choices":["2002","1978","2010","1899"],"correctAnswer":0},
   {"category":"world","question":"Headquarters of UNO are located at","choices":["Geneva (Switzerland)","Paris (France)","Hague (Netherlands)","New York (USA)"],"correctAnswer":3},
   {"category":"trivia","question":"For seeing objects at the surface of water from a submarine under water, the instrument used is","choices":["telescope","spectroscope","periscope","noScope 360"],"correctAnswer":2}];
-  $scope.quizObjectJSON=[];
-  $scope.eliminateDuplicates=function (arr) {
-  	var i,
-  	len=arr.length,
-  	out=[],
-  	obj={};
+  var eliminateDuplicates=function (arr) {
+    var i,
+    len=arr.length,
+    out=[],
+    obj={};
 
-  	for (i=0;i<len;i++) {
-  		obj[arr[i]]=0;
-  	}
-  	for (i in obj) {
-  		out.push(i);
-  	}
-  	return out;
+    for (i=0;i<len;i++) {
+      obj[arr[i]]=0;
+    }
+    for (i in obj) {
+      out.push(i);
+    }
+    return out;
   }
-  $scope.returnArray=[];
-  while ($scope.returnArray.length<11){
-  	$scope.randomNum=Math.floor(Math.random()*($scope.quizObjectRaw.length))+0;
-  	$scope.returnArray.push($scope.randomNum);
-  	$scope.eliminateDuplicates($scope.returnArray);
+  var quizObjectJSON=[];
+  var randomizeArray=function(targetArr,resultArr){
+    //resultArr=[];
+    var returnArray=[];
+    while (returnArray.length<targetArr.length){
+    	var randomNum=Math.floor(Math.random()*(targetArr.length))+0;
+    	returnArray.push(randomNum);
+    	eliminateDuplicates(returnArray);
+    }
+    for (var l=0;l<returnArray.length;l++){
+    	var thisOne=returnArray[l];
+    	resultArr.push(targetArr[thisOne]);
+    }
+  };
+  var quizObjectMixed=[];
+  this.finalObject=[];
+  this.questionNumberS=0;
+  //randomizeArray(quizObjectRaw,this.quizObjectMixed);
+  this.sortCategories=function(arr){
+    this.questionNumberS=0;
+    quizObjectMixed=[];
+    quizObjectJSON=[];
+    this.finalObject=[];
+    randomizeArray(quizObjectRaw,quizObjectMixed);
+    for (var i=0;i<arr.length;i++){
+      if (arr[i]==='all'){
+        quizObjectJSON=quizObjectMixed;
+        break;
+      }
+      else{
+        for (var v=0;v<quizObjectMixed.length;v++){
+          if (quizObjectMixed[v].category===arr[i]){
+            quizObjectJSON.push(quizObjectMixed[v]);
+          }
+          else {continue;}
+        }
+      }
+    }
+    this.finalObject=quizObjectJSON;
   }
-  for (var l=0;l<$scope.returnArray.length-1;l++){
-  	$scope.thisOne=$scope.returnArray[l];
-  	$scope.quizObjectJSON.push($scope.quizObjectRaw[$scope.thisOne]);
+}).controller('stateChange',['$scope','$state',function($scope,$state){
+  $scope.setPage=function(page){
+    $state.transitionTo(page)
   }
+}]).controller("StartController",['$scope','$state','Data',function($scope,$state,Data){
+  $scope.finalCategors=[{"category":"all"},{"category":"trivia"},{"category":"science"},{"category":"world"},{"category":"history"},{"category":"economics"}];
+  $scope.thisIsIt=[];
+  $scope.thisIsSelected;
+  $scope.whichCategory=function(){
+    for (var s=0;s<$scope.finalCategors.length;s++){
+      //$scope.finalCategors[s].chosen=false;
+      if (!$scope.finalCategors[s].chosen) {continue;}
+      else {$scope.thisIsIt.push($scope.finalCategors[s].category);}
+      //else {alert("FUCK");}
+    }
+  }
+
+  $scope.startQuiz=function(){
+    $scope.thisIsIt=[];
+    $scope.whichCategory();
+    Data.sortCategories($scope.thisIsIt);
+    $scope.setPage('quiz');
+  }
+}]).controller('QuizController',['$scope','Data',function($scope,Data){
+  $scope.quizObjectJSON=[];
+  $scope.quizObjectJSON=Data.finalObject;
+  $scope.answeredQuiz=[];
   $scope.answeredQuiz=$scope.quizObjectJSON;
   $scope.title="Avi's quiz";
-  $scope.questionNumber=-1;
-  $scope.hideWelcomeDiv=false;
-  $scope.isQuizActive=false;
+  $scope.questionNumber=Data.questionNumberS;
+  $scope.isQuizActive=true;
   $scope.scoreQuizNow=false;
   $scope.quizIsDone=false;
   $scope.finalScore=0;
@@ -94,12 +154,8 @@ angular.module('quizApp', ['ionic'])
   $scope.notAnswereds=[];
   $scope.nextButtonOnclick=function(){
     var goOn=false;
-    $scope.hideWelcomeDiv=true;
     $scope.isQuizActive=true;
-    if ($scope.questionNumber===-1){
-      $scope.questionNumber++;
-    }
-    else { 
+    if ($scope.questionNumber<$scope.quizObjectJSON.length) { 
       if (!$scope.answeredQuiz[$scope.questionNumber].userAnswer){
         if ($scope.answeredQuiz[$scope.questionNumber].userAnswer===0){
           $scope.questionNumber++;
@@ -112,6 +168,7 @@ angular.module('quizApp', ['ionic'])
       }
       else {$scope.questionNumber++;goOn=true;}
     }
+    //else {$scope.isQuizActive}
     return goOn;
   }
   $scope.backButtonOnclick=function(){
@@ -138,22 +195,15 @@ angular.module('quizApp', ['ionic'])
       if ($scope.finalScore===10){$scope.perfectQuiz=true;}
     }
   }
-}]).controller('AcknowledgementsContr',['$scope',function($scope){
-    $scope.thankYou="Flying Spaghetti Monster";
-}]).directive('questionDiv',function(){
+}]).controller('AcknowledgementsContr',function($scope,Data){
+    $scope.thankYou=Data;
+    //$scope.thankYou="Flying Spaghetti Monster";
+}).directive('questionDiv',function(){
   return{
     restrict:'E',
     replace:true,
     //scope:{questionNumber:'='},
     templateUrl:'templates/questionDivTmpl.html',
   }
-}).controller ('MainCtrl',['$scope', '$ionicSideMenuDelegate', function($scope, $ionicSideMenuDelegate) {
-  $scope.toggleLeftSideMenu = function() {
-    $ionicSideMenuDelegate.toggleLeft();
-  };
-}]).controller('stateChange',['$scope','$state',function($scope,$state){
-  $scope.setPage=function(page){
-    $state.transitionTo(page)
-  }
-}])
+})
 
