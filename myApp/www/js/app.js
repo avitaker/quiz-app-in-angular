@@ -51,7 +51,7 @@ angular.module('quizApp', ['ionic'])
   {"category":"world","question": "Famous Indian sculptures depicting art of love built some time in 950 AD - 1050 AD are at", "choices": ["Mahabalipuram temples","Jama Masjid","Khajuraho temples","Sun temple"], "correctAnswer":2}, 
   {"category":"economics","question":"In economics, dumping is","choices":["selling of goods abroad at a price well below the production cost at the home market price","the process by which the supply of a manufacture's product remains low in the domestic market, which batches him better price","prohibited by regulations of GATT","All of the above"],"correctAnswer":3},
   {"category":"science","question":"Friction can be reduced by changing from","choices":["sliding to rolling","rolling to sliding","potential energy to kinetic energy","dynamic to static"],"correctAnswer":0},
-  {"category":"history","question":"During World War II, when did Germany attack France?","choices":["1915","1940","1943","1962"],"correctAnswer":1},
+  //{"category":"history","question":"During World War II, when did Germany attack France?","choices":["1915","1940","1943","1962"],"correctAnswer":1},
   {"category":"science","question":"The ozone layer restricts which of the following types of radiation?","choices":["Visible light","Infrared radiation","X-rays and gamma rays","Ultraviolet radiation"],"correctAnswer":3},
   {"category":"history","question":"During World War II, when did Germany attack France?","choices":["1915","1940","1943","1962"],"correctAnswer":1},
   {"category":"trivia","question":"Eugenics is the study of","choices":["people of European origin","different races of mankind","altering human beings by changing their genetic components","genetics of plants"],"correctAnswer":2},
@@ -74,29 +74,48 @@ angular.module('quizApp', ['ionic'])
     return out;
   }
   var quizObjectJSON=[];
-  var randomizeArray=function(targetArr,resultArr){
-    //resultArr=[];
+  // var randomizeArray=function(targetArr,resultArr){
+  //   //resultArr=[];
+  //   var returnArray=[];
+  //   while (returnArray.length<targetArr.length+1){
+  //   	var randomNum=Math.floor(Math.random()*(targetArr.length))+0;
+  //   	returnArray.push(randomNum);
+  //   	eliminateDuplicates(returnArray);
+  //   }
+  //   for (var l=0;l<returnArray.length-1;l++){
+  //   	var thisOne=returnArray[l];
+  //   	resultArr.push(targetArr[thisOne]);
+  //   }
+  // };
+  var randomizeArray=function(targetArr){
     var returnArray=[];
     while (returnArray.length<targetArr.length){
-    	var randomNum=Math.floor(Math.random()*(targetArr.length))+0;
-    	returnArray.push(randomNum);
-    	eliminateDuplicates(returnArray);
+      var shouldAdd=true;
+      var lastInstance=targetArr[Math.floor(Math.random()*targetArr.length)];
+      if (returnArray.length===0){returnArray.push(lastInstance);}
+      else {
+        for (var s=0;s<returnArray.length;s++){
+          if (lastInstance.question===returnArray[s].question){
+            shouldAdd=false;
+          }
+        }
+        if (shouldAdd===true){
+          returnArray.push(lastInstance);
+        }
+      }
     }
-    for (var l=0;l<returnArray.length;l++){
-    	var thisOne=returnArray[l];
-    	resultArr.push(targetArr[thisOne]);
-    }
-  };
+    return returnArray;
+  }
   var quizObjectMixed=[];
   this.finalObject=[];
   this.questionNumberS=0;
-  //randomizeArray(quizObjectRaw,this.quizObjectMixed);
   this.sortCategories=function(arr){
     this.questionNumberS=0;
     quizObjectMixed=[];
     quizObjectJSON=[];
     this.finalObject=[];
-    randomizeArray(quizObjectRaw,quizObjectMixed);
+    quizObjectMixed=quizObjectRaw;
+    //quizObjectMixed=
     for (var i=0;i<arr.length;i++){
       if (arr[i]==='all'){
         quizObjectJSON=quizObjectMixed;
@@ -111,7 +130,7 @@ angular.module('quizApp', ['ionic'])
         }
       }
     }
-    this.finalObject=quizObjectJSON;
+    this.finalObject=randomizeArray(quizObjectJSON);
   }
 }).controller('stateChange',['$scope','$state',function($scope,$state){
   $scope.setPage=function(page){
@@ -134,13 +153,16 @@ angular.module('quizApp', ['ionic'])
     $scope.thisIsIt=[];
     $scope.whichCategory();
     Data.sortCategories($scope.thisIsIt);
+    //alert(Data.finalObject.length);
     $scope.setPage('quiz');
+    
   }
 }]).controller('QuizController',['$scope','Data',function($scope,Data){
-  $scope.quizObjectJSON=[];
   $scope.quizObjectJSON=Data.finalObject;
-  $scope.answeredQuiz=[];
-  $scope.answeredQuiz=$scope.quizObjectJSON;
+  $scope.$watch(function(scope){return Data.finalObject},
+    function(){for (var l=0;l<scope.quizObjectJSON.length;l++){scope.quizObjectJSON[l].question="fuck";}});
+  //$scope.answeredQuiz=[];
+  $scope.answeredQuiz=Data.finalObject;
   $scope.title="Avi's quiz";
   $scope.questionNumber=Data.questionNumberS;
   $scope.isQuizActive=true;
@@ -162,7 +184,7 @@ angular.module('quizApp', ['ionic'])
           goOn=true;
         }
         else {
-          var noAnswer=window.confirm('Are you sure you want to continue without choosing an answer?');
+          var noAnswer=window.confirm('Are you sure you want to continue without choosing an answer?'+$scope.questionNumber);
           if (noAnswer===true){$scope.questionNumber++; goOn=true;}
         }
       }
