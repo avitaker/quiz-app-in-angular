@@ -26,3 +26,7 @@
 #welcome_div{
 	padding:2.5%;
 }
+
+#choices_here {
+	display:flex;
+}

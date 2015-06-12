@@ -3,6 +3,7 @@
               <button menu-toggle="left" class="button button-icon icon ion-navicon"></button>
             </ion-nav-buttons>
     <ion-content ng-controller='QuizController'>
+        <div class="card" ng-show="noCategory"><div class="item item-text-wrap">You must pick a category before continuing</div></div>
         <!-- <div id="welcome_div" ng-hide="hideWelcomeDiv">Welcome to my quiz. Please click "Next" to continue <a href='google.com'></a></div> -->
         <question-div id="quiz_area" ng-show='isQuizActive'></question-div>
         <div class ="card" id="final_results" ng-show="scoreQuizNow">
@@ -20,11 +21,11 @@
             </div>
         </div>
         <div class="button-bar">
-            <a class="button button-outline button-royal" ng-click="backButtonOnclick()" ng-show='isQuizActive' ng-disabled="questionNumber<=0">Go back to first question</a>
-            <a class="button button-outline button-balanced" ng-click="nextButtonOnclick()" ng-disabled="questionNumber===answeredQuiz.length-1" ng-show='!scoreQuizNow'>Next</a>
+            <a class="button button-outline button-assertive" ng-click="backButtonOnclick()" ng-show='isQuizActive' ng-disabled="questionNumber<=0">Go back to first question</a>
+            <a class="button button-outline button-calm" ng-click="nextButtonOnclick()" ng-disabled="questionNumber===answeredQuiz.length-1" ng-show='!scoreQuizNow'>Next</a>
         </div>
         <div class="button-bar">
-            <a class="button button-assertive" ng-show='questionNumber===answeredQuiz.length-1' ng-click="finishButtonOnclick()">Finish and score quiz</a>
+            <a class="button button-balanced" ng-show='questionNumber===answeredQuiz.length-1' ng-click="finishButtonOnclick()">Finish and score quiz</a>
         <!--<button class="button button-block button-calm" ng-show='isQuizDone' onclick="location.reload()">Reload quiz?</button>-->
     </ion-content>
 </ion-view>

@@ -13,7 +13,10 @@ angular.module('quizApp', ['ionic'])
       cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
     }
     if(window.StatusBar) {
-      StatusBar.styleDefault();
+      if (cordova.platformId == 'android') {
+        StatusBar.backgroundColorByHexString("#ff0000");
+      }
+      else {StatusBar.styleDefault();}
     }
   });
 }).config(['$ionicConfigProvider', function($ionicConfigProvider) {
@@ -99,7 +102,6 @@ angular.module('quizApp', ['ionic'])
           else {continue;}
         }
       }
-      alert(quizObjectJSON.length)
     }
     factory.finalObject=randomizeArray(quizObjectJSON);
     factory.answeredQuiz=[];
@@ -128,7 +130,9 @@ angular.module('quizApp', ['ionic'])
     $scope.setPage('quiz');
     
   }
-}]).controller('QuizController',['$scope','Data',function($scope,Data){
+}]).controller('QuizController',['$scope','Data','$ionicPopup',function($scope,Data,$ionicPopup){
+  $scope.noCategory=false;
+  if (Data.finalObject.length===0){$scope.noCategory=true;}
   $scope.answeredQuiz=Data.finalObject;
   $scope.quizObjectJSON=Data.finalObject;
   $scope.$watch(function(Data){return Data.finalObject},
@@ -146,6 +150,18 @@ angular.module('quizApp', ['ionic'])
   $scope.perfectQuiz=false;
   $scope.wrongAnswers=[];
   $scope.notAnswereds=[];
+  $scope.showConfirm = function() {
+     var confirmPopup = $ionicPopup.confirm({
+       title: 'Skip question?',
+       template: 'Are you sure you want to continue without choosing an answer?'
+     });
+     confirmPopup.then(function(res) {
+       if(res) {
+         $scope.questionNumber++; goOn=true;
+       } else {
+       }
+     });
+   };
   $scope.nextButtonOnclick=function(){
     var goOn=false;
     $scope.isQuizActive=true;
@@ -156,8 +172,9 @@ angular.module('quizApp', ['ionic'])
           goOn=true;
         }
         else {
-          var noAnswer=window.confirm('Are you sure you want to continue without choosing an answer?'+$scope.answeredQuiz[$scope.questionNumber-1].userAnswer);
-          if (noAnswer===true){$scope.questionNumber++; goOn=true;}
+          $scope.showConfirm();
+          // var noAnswer=window.confirm('Are you sure you want to continue without choosing an answer?');
+          // if (noAnswer===true){$scope.questionNumber++; goOn=true;}
         }
       }
       else {$scope.questionNumber++;goOn=true;}
