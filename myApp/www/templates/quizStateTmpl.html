@@ -21,10 +21,10 @@
         </div>
         <div class="button-bar">
             <a class="button button-outline button-royal" ng-click="backButtonOnclick()" ng-show='isQuizActive' ng-disabled="questionNumber<=0">Go back to first question</a>
-            <a class="button button-outline button-balanced" ng-click="nextButtonOnclick()" ng-disabled="questionNumber===quizObjectJSON.length-1" ng-show='!scoreQuizNow'>Next</a>
+            <a class="button button-outline button-balanced" ng-click="nextButtonOnclick()" ng-disabled="questionNumber===answeredQuiz.length-1" ng-show='!scoreQuizNow'>Next</a>
         </div>
         <div class="button-bar">
-            <a class="button button-assertive" ng-show='questionNumber===quizObjectJSON.length-1' ng-click="finishButtonOnclick()">Finish and score quiz</a>
+            <a class="button button-assertive" ng-show='questionNumber===answeredQuiz.length-1' ng-click="finishButtonOnclick()">Finish and score quiz</a>
         <!--<button class="button button-block button-calm" ng-show='isQuizDone' onclick="location.reload()">Reload quiz?</button>-->
     </ion-content>
 </ion-view>

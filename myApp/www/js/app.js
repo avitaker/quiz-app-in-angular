@@ -59,34 +59,7 @@ angular.module('quizApp', ['ionic'])
   {"category":"history","question":"Hamid Karzai was chosen president of Afghanistan in","choices":["2002","1978","2010","1899"],"correctAnswer":0},
   {"category":"world","question":"Headquarters of UNO are located at","choices":["Geneva (Switzerland)","Paris (France)","Hague (Netherlands)","New York (USA)"],"correctAnswer":3},
   {"category":"trivia","question":"For seeing objects at the surface of water from a submarine under water, the instrument used is","choices":["telescope","spectroscope","periscope","noScope 360"],"correctAnswer":2}];
-  var eliminateDuplicates=function (arr) {
-    var i,
-    len=arr.length,
-    out=[],
-    obj={};
-
-    for (i=0;i<len;i++) {
-      obj[arr[i]]=0;
-    }
-    for (i in obj) {
-      out.push(i);
-    }
-    return out;
-  }
   var quizObjectJSON=[];
-  // var randomizeArray=function(targetArr,resultArr){
-  //   //resultArr=[];
-  //   var returnArray=[];
-  //   while (returnArray.length<targetArr.length+1){
-  //   	var randomNum=Math.floor(Math.random()*(targetArr.length))+0;
-  //   	returnArray.push(randomNum);
-  //   	eliminateDuplicates(returnArray);
-  //   }
-  //   for (var l=0;l<returnArray.length-1;l++){
-  //   	var thisOne=returnArray[l];
-  //   	resultArr.push(targetArr[thisOne]);
-  //   }
-  // };
   var randomizeArray=function(targetArr){
     var returnArray=[];
     while (returnArray.length<targetArr.length){
@@ -106,25 +79,17 @@ angular.module('quizApp', ['ionic'])
     }
     return returnArray;
   }
-  var quizObjectMixed=[];
   this.finalObject=[];
   this.questionNumberS=0;
   this.sortCategories=function(arr){
     this.questionNumberS=0;
-    quizObjectMixed=[];
     quizObjectJSON=[];
     this.finalObject=[];
-    quizObjectMixed=quizObjectRaw;
-    //quizObjectMixed=
     for (var i=0;i<arr.length;i++){
       if (arr[i]==='all'){
-        quizObjectJSON=quizObjectMixed;
         break;
       }
       else{
-        for (var v=0;v<quizObjectMixed.length;v++){
-          if (quizObjectMixed[v].category===arr[i]){
-            quizObjectJSON.push(quizObjectMixed[v]);
           }
           else {continue;}
         }
@@ -142,10 +107,8 @@ angular.module('quizApp', ['ionic'])
   $scope.thisIsSelected;
   $scope.whichCategory=function(){
     for (var s=0;s<$scope.finalCategors.length;s++){
-      //$scope.finalCategors[s].chosen=false;
       if (!$scope.finalCategors[s].chosen) {continue;}
       else {$scope.thisIsIt.push($scope.finalCategors[s].category);}
-      //else {alert("FUCK");}
     }
   }
 
@@ -153,17 +116,12 @@ angular.module('quizApp', ['ionic'])
     $scope.thisIsIt=[];
     $scope.whichCategory();
     Data.sortCategories($scope.thisIsIt);
-    //alert(Data.finalObject.length);
     $scope.setPage('quiz');
     
   }
 }]).controller('QuizController',['$scope','Data',function($scope,Data){
   $scope.quizObjectJSON=Data.finalObject;
-  $scope.$watch(function(scope){return Data.finalObject},
-    function(){for (var l=0;l<scope.quizObjectJSON.length;l++){scope.quizObjectJSON[l].question="fuck";}});
-  //$scope.answeredQuiz=[];
   $scope.answeredQuiz=Data.finalObject;
-  $scope.title="Avi's quiz";
   $scope.questionNumber=Data.questionNumberS;
   $scope.isQuizActive=true;
   $scope.scoreQuizNow=false;
@@ -184,13 +142,11 @@ angular.module('quizApp', ['ionic'])
           goOn=true;
         }
         else {
-          var noAnswer=window.confirm('Are you sure you want to continue without choosing an answer?'+$scope.questionNumber);
           if (noAnswer===true){$scope.questionNumber++; goOn=true;}
         }
       }
       else {$scope.questionNumber++;goOn=true;}
     }
-    //else {$scope.isQuizActive}
     return goOn;
   }
   $scope.backButtonOnclick=function(){
@@ -199,16 +155,11 @@ angular.module('quizApp', ['ionic'])
   $scope.finishButtonOnclick=function(){
     if ($scope.nextButtonOnclick()){
       $scope.isQuizActive=false;
-      for (var i=0;i<$scope.answeredQuiz.length;i++){
-        if ($scope.answeredQuiz[i].userAnswer===$scope.answeredQuiz[i].correctAnswer){
           $scope.finalScore+=1;
         }
-        else if ($scope.answeredQuiz[i].userAnswer!=$scope.answeredQuiz[i].correctAnswer && $scope.answeredQuiz[i].userAnswer!=null|undefined){
-          $scope.wrongAnswers.push($scope.answeredQuiz[i]);
           $scope.anyWrong=true;
         }
         else {
-          $scope.notAnswereds.push($scope.answeredQuiz[i]);
           $scope.anyMissed=true;
         }
       }
@@ -219,7 +170,6 @@ angular.module('quizApp', ['ionic'])
   }
 }]).controller('AcknowledgementsContr',function($scope,Data){
     $scope.thankYou=Data;
-    //$scope.thankYou="Flying Spaghetti Monster";
 }).directive('questionDiv',function(){
   return{
     restrict:'E',
@@ -227,5 +177,4 @@ angular.module('quizApp', ['ionic'])
     //scope:{questionNumber:'='},
     templateUrl:'templates/questionDivTmpl.html',
   }
-})
 
