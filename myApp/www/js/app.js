@@ -38,7 +38,8 @@ angular.module('quizApp', ['ionic'])
     controller:'AcknowledgementsContr'
   });
   $urlRouterProvider.otherwise('/choose');
-}]).service("Data",function(){
+}]).factory("Data",function(){
+  var factory={};
   var quizObjectRaw=[{"category":"trivia","question": "Grand Central Terminal, Park Avenue, New York is the world's", "choices": ["largest railway station","highest railway station","longest railway station","None of the above"], "correctAnswer":0},
   {"category":"science","question": "Entomology is the science that studies", "choices": ["Behavior of human beings","Insects","The origin and history of technical and scientific terms","the formation of rocks"], "correctAnswer":1},
   {"category":"world","question": "Eritrea, which became the 182nd member of the UN in 1993, is in the continent of", "choices": ["Asia","Europe","Africa","Australia"], "correctAnswer":2},
@@ -79,24 +80,32 @@ angular.module('quizApp', ['ionic'])
     }
     return returnArray;
   }
-  this.finalObject=[];
-  this.questionNumberS=0;
-  this.sortCategories=function(arr){
-    this.questionNumberS=0;
+  factory.finalObject=[];
+  factory.questionNumberS=0;
+  factory.sortCategories=function(arr){
+    factory.questionNumberS=0;
     quizObjectJSON=[];
-    this.finalObject=[];
+    factory.finalObject=[];
     for (var i=0;i<arr.length;i++){
       if (arr[i]==='all'){
+        quizObjectJSON=quizObjectRaw;
         break;
       }
       else{
+        for (var v=0;v<quizObjectRaw.length;v++){
+          if (quizObjectRaw[v].category===arr[i]){
+            quizObjectJSON.push(quizObjectRaw[v]);
           }
           else {continue;}
         }
       }
+      alert(quizObjectJSON.length)
     }
-    this.finalObject=randomizeArray(quizObjectJSON);
+    factory.finalObject=randomizeArray(quizObjectJSON);
+    factory.answeredQuiz=[];
+    factory.answeredQuiz=factory.finalObject;
   }
+  return factory;
 }).controller('stateChange',['$scope','$state',function($scope,$state){
   $scope.setPage=function(page){
     $state.transitionTo(page)
@@ -120,8 +129,13 @@ angular.module('quizApp', ['ionic'])
     
   }
 }]).controller('QuizController',['$scope','Data',function($scope,Data){
-  $scope.quizObjectJSON=Data.finalObject;
   $scope.answeredQuiz=Data.finalObject;
+  $scope.quizObjectJSON=Data.finalObject;
+  $scope.$watch(function(Data){return Data.finalObject},
+    function(){
+      for (var l=0;l<$scope.answeredQuiz.length;l++){
+        $scope.answeredQuiz[l].userAnswer=null;
+      }});
   $scope.questionNumber=Data.questionNumberS;
   $scope.isQuizActive=true;
   $scope.scoreQuizNow=false;
@@ -142,11 +156,14 @@ angular.module('quizApp', ['ionic'])
           goOn=true;
         }
         else {
+          var noAnswer=window.confirm('Are you sure you want to continue without choosing an answer?'+$scope.answeredQuiz[$scope.questionNumber-1].userAnswer);
           if (noAnswer===true){$scope.questionNumber++; goOn=true;}
         }
       }
       else {$scope.questionNumber++;goOn=true;}
     }
+    $scope.$watch(function(scope){return scope.answeredQuiz},
+      function(){Data.answeredQuiz=scope.answeredQuiz})
     return goOn;
   }
   $scope.backButtonOnclick=function(){
@@ -155,11 +172,16 @@ angular.module('quizApp', ['ionic'])
   $scope.finishButtonOnclick=function(){
     if ($scope.nextButtonOnclick()){
       $scope.isQuizActive=false;
+      for (var i=0;i<Data.answeredQuiz.length;i++){
+        if (Data.answeredQuiz[i].userAnswer===Data.answeredQuiz[i].correctAnswer){
           $scope.finalScore+=1;
         }
+        else if (Data.answeredQuiz[i].userAnswer!=Data.answeredQuiz[i].correctAnswer && Data.answeredQuiz[i].userAnswer!=null|undefined){
+          $scope.wrongAnswers.push(Data.answeredQuiz[i]);
           $scope.anyWrong=true;
         }
         else {
+          $scope.notAnswereds.push(Data.answeredQuiz[i]);
           $scope.anyMissed=true;
         }
       }
@@ -177,4 +199,5 @@ angular.module('quizApp', ['ionic'])
     //scope:{questionNumber:'='},
     templateUrl:'templates/questionDivTmpl.html',
   }
+});
 
