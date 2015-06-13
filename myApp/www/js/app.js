@@ -19,11 +19,13 @@ angular.module('quizApp', ['ionic'])
       else {StatusBar.styleDefault();}
     }
   });
-}).config(['$ionicConfigProvider', function($ionicConfigProvider) {
+})
+// .config(['$ionicConfigProvider', function($ionicConfigProvider) {
 
-    $ionicConfigProvider.tabs.position('bottom'); // other values: top
+//     $ionicConfigProvider.tabs.position('bottom'); // other values: top
 
-}]).config(['$stateProvider','$urlRouterProvider',function($stateProvider, $urlRouterProvider){
+// }])
+.config(['$stateProvider','$urlRouterProvider',function($stateProvider, $urlRouterProvider){
   $stateProvider
   .state('choose',{
     url:'/choose',
@@ -52,7 +54,7 @@ angular.module('quizApp', ['ionic'])
   {"category":"science","question": "Galileo was an Italian astronomer who", "choices": ["discovered four satellites of Jupiter","discovered that the movement of pendulum produces a regular time measurement","developed the telescope","All of the above"], "correctAnswer":3},
   {"category":"science","question": "Exposure to sunlight helps improve a person's health because", "choices": ["resistance power increases","the ultraviolet rays convert skin oil into Vitamin D","the infrared light kills bacteria in the body","the pigment cells in the skin get stimulated and produce a healthy tan"], "correctAnswer":1},
   {"category":"history","question": "First China War was fought between", "choices": ["China and Britain","China and France","China and Egypt","China and Greece"], "correctAnswer":0},
-  {"category":"world","question": "Famous Indian sculptures depicting art of love built some time in 950 AD - 1050 AD are at", "choices": ["Mahabalipuram temples","Jama Masjid","Khajuraho temples","Sun temple"], "correctAnswer":2}, 
+  {"category":"world","question": "Famous Indian sculptures depicting art of love built some time in 950 AD - 1050 AD are at", "choices": ["Mahabalipuram temples","Jama Masjid","Khajuraho temples","Sun temple"], "correctAnswer":2},
   {"category":"economics","question":"In economics, dumping is","choices":["selling of goods abroad at a price well below the production cost at the home market price","the process by which the supply of a manufacture's product remains low in the domestic market, which batches him better price","prohibited by regulations of GATT","All of the above"],"correctAnswer":3},
   {"category":"science","question":"Friction can be reduced by changing from","choices":["sliding to rolling","rolling to sliding","potential energy to kinetic energy","dynamic to static"],"correctAnswer":0},
   //{"category":"history","question":"During World War II, when did Germany attack France?","choices":["1915","1940","1943","1962"],"correctAnswer":1},
@@ -128,7 +130,7 @@ angular.module('quizApp', ['ionic'])
     $scope.whichCategory();
     Data.sortCategories($scope.thisIsIt);
     $scope.setPage('quiz');
-    
+
   }
 }]).controller('QuizController',['$scope','Data','$ionicPopup',function($scope,Data,$ionicPopup){
   $scope.noCategory=false;
@@ -165,7 +167,7 @@ angular.module('quizApp', ['ionic'])
   $scope.nextButtonOnclick=function(){
     var goOn=false;
     $scope.isQuizActive=true;
-    if ($scope.questionNumber<$scope.quizObjectJSON.length) { 
+    if ($scope.questionNumber<$scope.quizObjectJSON.length) {
       if (!$scope.answeredQuiz[$scope.questionNumber].userAnswer){
         if ($scope.answeredQuiz[$scope.questionNumber].userAnswer===0){
           $scope.questionNumber++;
@@ -217,4 +219,3 @@ angular.module('quizApp', ['ionic'])
     templateUrl:'templates/questionDivTmpl.html',
   }
 });
-
